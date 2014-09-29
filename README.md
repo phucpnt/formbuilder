@@ -1,6 +1,12 @@
 Formbuilder.js
 ============
 
+## Notes
+This project has been converted into javascript base instead of coffeescript or my convience.
+A few new notes when convert into javascript:
++ Grunt build transfer
++ Project export dist. same as origin coffeescript version so far.
+
 #### Update 9/26/14
 
 I'm working on a new version of formbuilder that uses [formrenderer-base](https://github.com/dobtco/formrenderer-base) as a dependency. This will make it so that rendering a form for a user to fill out is as simple as plugging in your data from the builder. It's a bit of a chore to extract this stuff from [Screendoor](http://www.dobt.co/screendoor), but I hope to make some progress in the next month.
