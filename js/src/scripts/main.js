@@ -223,6 +223,7 @@
       'click .js-save-form': 'saveForm',
       'click .fb-tabs a': 'showTab',
       'click .fb-add-field-types a': 'addField',
+      'click .js-preview-form': 'previewForm',
       'mouseover .fb-add-field-types': 'lockLeftWrapper',
       'mouseout .fb-add-field-types': 'unlockLeftWrapper'
     };
@@ -511,6 +512,12 @@
       });
     };
 
+    BuilderView.prototype.previewForm = function(){
+      this.saveForm();
+      var fields = this.collection.toJSON();
+      this.formBuilder.export(fields, 'bootstrap3');
+    };
+
     return BuilderView;
 
   })(Backbone.View);
@@ -553,7 +560,8 @@
         MAX: 'field_options.max',
         MINLENGTH: 'field_options.minlength',
         MAXLENGTH: 'field_options.maxlength',
-        LENGTH_UNITS: 'field_options.min_max_length_units'
+        LENGTH_UNITS: 'field_options.min_max_length_units',
+        _crm_field: 'field_options._crm_field'
       },
       dict: {
         ALL_CHANGES_SAVED: 'All changes saved',

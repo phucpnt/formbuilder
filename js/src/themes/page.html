@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Form builder preview</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <%= Formbuilder.themes[current_theme + '/header.html']()%>
+  </head>
+  <body>
+    <%= Formbuilder.themes[current_theme + '/content.html'](form_fields) %>
+  </body>
+</html>
