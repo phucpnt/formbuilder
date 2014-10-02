@@ -4,9 +4,9 @@
     <title>Form builder preview</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <%= Formbuilder.themes[current_theme + '/header.html']()%>
+    <%= Formbuilder.themes[current_theme + '/header']()%>
   </head>
   <body>
-    <%= Formbuilder.themes[current_theme + '/content.html'](form_fields) %>
+    <%= Formbuilder.themes[current_theme + '/'+ layout]({form_fields: form_fields}) %>
   </body>
 </html>

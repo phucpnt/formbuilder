@@ -223,7 +223,6 @@
       'click .js-save-form': 'saveForm',
       'click .fb-tabs a': 'showTab',
       'click .fb-add-field-types a': 'addField',
-      'click .js-preview-form': 'previewForm',
       'mouseover .fb-add-field-types': 'lockLeftWrapper',
       'mouseout .fb-add-field-types': 'unlockLeftWrapper'
     };
@@ -510,12 +509,6 @@
           };
         })(this)
       });
-    };
-
-    BuilderView.prototype.previewForm = function(){
-      this.saveForm();
-      var fields = this.collection.toJSON();
-      this.formBuilder.export(fields, 'bootstrap3');
     };
 
     return BuilderView;

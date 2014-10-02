@@ -38,7 +38,7 @@
             '<%= compiledFolder %>/templates.js': '<%= srcFolder %>/templates/**/*.html'
           }
         },
-        themes:{
+        themes: {
           options: {
             namespace: 'Formbuilder.themes',
             processName: function (filename) {
@@ -63,7 +63,22 @@
               '<%= srcFolder %>/scripts/fields/*.js',
               '<%= compiledFolder %>/*.js'
             ],
-            '<%= vendorFolder %>/js/vendor.js': ['bower_components/ie8-node-enum/index.js', 'bower_components/jquery/jquery.js', 'bower_components/jquery-ui/ui/jquery.ui.core.js', 'bower_components/jquery-ui/ui/jquery.ui.widget.js', 'bower_components/jquery-ui/ui/jquery.ui.mouse.js', 'bower_components/jquery-ui/ui/jquery.ui.draggable.js', 'bower_components/jquery-ui/ui/jquery.ui.droppable.js', 'bower_components/jquery-ui/ui/jquery.ui.sortable.js', 'bower_components/jquery.scrollWindowTo/index.js', 'bower_components/underscore/underscore-min.js', 'bower_components/underscore.mixin.deepExtend/index.js', 'bower_components/rivets/dist/rivets.js', 'bower_components/backbone/backbone.js', 'bower_components/backbone-deep-model/src/deep-model.js']
+            '<%= vendorFolder %>/js/vendor.js': [
+              'bower_components/ie8-node-enum/index.js',
+              'bower_components/jquery/jquery.js',
+              'bower_components/jquery-ui/ui/jquery.ui.core.js',
+              'bower_components/jquery-ui/ui/jquery.ui.widget.js',
+              'bower_components/jquery-ui/ui/jquery.ui.mouse.js',
+              'bower_components/jquery-ui/ui/jquery.ui.draggable.js',
+              'bower_components/jquery-ui/ui/jquery.ui.droppable.js',
+              'bower_components/jquery-ui/ui/jquery.ui.sortable.js',
+              'bower_components/jquery.scrollWindowTo/index.js',
+              'bower_components/lodash/dist/lodash.min.js',
+              'bower_components/underscore.mixin.deepExtend/index.js',
+              'bower_components/rivets/dist/rivets.js',
+              'bower_components/backbone/backbone.js',
+              'bower_components/backbone-deep-model/src/deep-model.js'
+            ]
           }
         },
         dev: {
@@ -87,7 +102,13 @@
               '<%= srcFolder %>/scripts/fields/*.js',
               '<%= compiledFolder %>/*.js'
             ],
-            '<%= vendorFolder %>/js/vendor_mobile_friendly.js': ['bower_components/ie8-node-enum/index.js', 'bower_components/jquery.scrollWindowTo/index.js', 'bower_components/underscore.mixin.deepExtend/index.js', 'bower_components/rivets/dist/rivets.js', 'bower_components/backbone-deep-model/src/deep-model.js']
+            '<%= vendorFolder %>/js/vendor_mobile_friendly.js': [
+              'bower_components/ie8-node-enum/index.js',
+              'bower_components/jquery.scrollWindowTo/index.js',
+              'bower_components/underscore.mixin.deepExtend/index.js',
+              'bower_components/rivets/dist/rivets.js',
+              'bower_components/backbone-deep-model/src/deep-model.js'
+            ]
           }
         }
       },
@@ -120,7 +141,7 @@
       watch: {
         all: {
           files: ['<%= srcFolder %>/**/*.{js,styl,html}'],
-          tasks: 'dev',
+          tasks: 'dev'
         }
       },
       release: {
@@ -133,7 +154,7 @@
       }
     });
     grunt.registerTask('default', ALL_TASKS);
-    grunt.registerTask('dev', [ 'jst:themes', 'concat:dev']);
+    grunt.registerTask('dev', ['jst:all', 'jst:themes', 'concat:dev']);
     grunt.registerTask('mobile_friendly', ['jst:all', 'concat:mobile_friendly', 'stylus:all', 'clean:compiled']);
     grunt.registerTask('dist', ['cssmin:dist', 'uglify:dist']);
     return grunt.registerTask('test', ['dist', 'karma']);

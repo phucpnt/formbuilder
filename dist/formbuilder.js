@@ -266,7 +266,6 @@
       'click .js-save-form': 'saveForm',
       'click .fb-tabs a': 'showTab',
       'click .fb-add-field-types a': 'addField',
-      'click .js-preview-form': 'previewForm',
       'mouseover .fb-add-field-types': 'lockLeftWrapper',
       'mouseout .fb-add-field-types': 'unlockLeftWrapper'
     };
@@ -555,12 +554,6 @@
       });
     };
 
-    BuilderView.prototype.previewForm = function(){
-      this.saveForm();
-      var fields = this.collection.toJSON();
-      this.formBuilder.export(fields, 'bootstrap3');
-    };
-
     return BuilderView;
 
   })(Backbone.View);
@@ -670,14 +663,26 @@
       'bootstrap3': {},
       'debug': {}
     };
+    this.mainView.undelegateEvents();
+    var nuEvents = _.assign(this.mainView.events, {
+      'click .js-preview-form': _.bind(this.previewForm, this)
+    });
+    this.mainView.delegateEvents(nuEvents);
   };
 
   ThemableFormBuilder.prototype = Object.create(Formbuilder.prototype);
 
+  ThemableFormBuilder.prototype.previewForm = function () {
+    var view = this.mainView;
+    view.saveForm();
+    var fields = view.collection.toJSON();
+    this.export(fields, 'bootstrap3');
+  };
+
   ThemableFormBuilder.prototype.export = function (fields, themeName) {
     if (this.providers[themeName]) {
       var html = this.buildForm(themeName, fields);
-      html = html + '<pre><code>' + JSON.stringify(fields, null, 2)+ '</code></pre>';
+      html = html + '<pre><code>' + JSON.stringify(fields, null, 2) + '</code></pre>';
       var nuWindow = window.open('', _.uniqueId('preview_'), "width=700, height=600, location=no");
       nuWindow.document.open();
       nuWindow.document.write(html);
@@ -686,7 +691,29 @@
   };
 
   ThemableFormBuilder.prototype.buildForm = function (themeName, fields) {
-    return '<h1>Hello World</h1>';
+    var html = '';
+    var renderFields = function (fields) {
+      return _.map(fields, function (field) {
+        field.field_id = _.uniqueId('f_');
+        var fieldtype = field.field_type;
+        fieldtype = 'text'; // testing
+        var tpl = [themeName, 'fields', fieldtype].join('/');
+        return Formbuilder.themes[tpl](field);
+      });
+    };
+    switch (themeName) {
+      case 'debug':
+        html = '<h1>Debug View</h1>';
+        break;
+      default:
+        html = Formbuilder.themes['page']({
+          current_theme: themeName,
+          layout: 'layout-1col',
+          form_fields: renderFields(fields)
+        });
+        break;
+    }
+    return html;
   };
 
   window.ThemableFormBuilder = ThemableFormBuilder;
@@ -1185,20 +1212,6 @@ __p += '<div class=\'fb-save-wrapper\'>\r\n  <button class=\'js-save-form ' +
 return __p
 };
 
-this["Formbuilder"]["templates"]["preview/page"] = function(obj) {
-obj || (obj = {});
-var __t, __p = '', __e = _.escape;
-with (obj) {
-__p += '<!DOCTYPE html>\r\n<html>\r\n  <head>\r\n    <title>Form builder preview</title>\r\n    <meta charset="UTF-8">\r\n    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>\r\n    ' +
-((__t = ( Formbuilder.themes[current_theme + '/header.html']())) == null ? '' : __t) +
-'\r\n  </head>\r\n  <body>\r\n    ' +
-((__t = ( Formbuilder.themes[current_theme + '/content.html'](form_fields) )) == null ? '' : __t) +
-'\r\n  </body>\r\n</html>\r\n';
-
-}
-return __p
-};
-
 this["Formbuilder"]["templates"]["view/base"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
@@ -1272,14 +1285,59 @@ return __p
 this["Formbuilder"] = this["Formbuilder"] || {};
 this["Formbuilder"]["themes"] = this["Formbuilder"]["themes"] || {};
 
+this["Formbuilder"]["themes"]["bootstrap3/fields/text"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<div class="form-group">\r\n  <label for="field_' +
+((__t = (field_id)) == null ? '' : __t) +
+'">' +
+((__t = (label)) == null ? '' : __t) +
+'</label>\r\n  <input type="text" class="form-control" id="field_' +
+((__t = (field_id)) == null ? '' : __t) +
+'" placeholder="' +
+((__t = ( field_options.placeholder)) == null ? '' : __t) +
+'">\r\n</div>';
+
+}
+return __p
+};
+
+this["Formbuilder"]["themes"]["bootstrap3/header"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<!-- Latest compiled and minified CSS -->\r\n<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">\r\n\r\n<!-- Optional theme -->\r\n<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">\r\n';
+
+}
+return __p
+};
+
+this["Formbuilder"]["themes"]["bootstrap3/layout-1col"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+__p += '<div class="container">\r\n  <form role="form">\r\n    ';
+ _.each(form_fields, function(html_field){ ;
+__p += '\r\n    ' +
+((__t = ( html_field )) == null ? '' : __t) +
+'\r\n    ';
+ }); ;
+__p += '\r\n  </form>\r\n</div>\r\n\r\n<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>\r\n<!-- Latest compiled and minified JavaScript -->\r\n<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>';
+
+}
+return __p
+};
+
 this["Formbuilder"]["themes"]["page"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
 __p += '<!DOCTYPE html>\r\n<html>\r\n  <head>\r\n    <title>Form builder preview</title>\r\n    <meta charset="UTF-8">\r\n    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>\r\n    ' +
-((__t = ( Formbuilder.themes[current_theme + '/header.html']())) == null ? '' : __t) +
+((__t = ( Formbuilder.themes[current_theme + '/header']())) == null ? '' : __t) +
 '\r\n  </head>\r\n  <body>\r\n    ' +
-((__t = ( Formbuilder.themes[current_theme + '/content.html'](form_fields) )) == null ? '' : __t) +
+((__t = ( Formbuilder.themes[current_theme + '/'+ layout]({form_fields: form_fields}) )) == null ? '' : __t) +
 '\r\n  </body>\r\n</html>\r\n';
 
 }
