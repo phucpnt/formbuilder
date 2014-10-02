@@ -26,8 +26,7 @@
   ThemableFormBuilder.prototype.export = function (fields, themeName) {
     if (this.providers[themeName]) {
       var html = this.buildForm(themeName, fields);
-      html = html + '<pre><code>' + JSON.stringify(fields, null, 2) + '</code></pre>';
-      var nuWindow = window.open('', _.uniqueId('preview_'), "width=700, height=600, location=no");
+      var nuWindow = window.open('', _.uniqueId('preview_'), "left=300, top=0, width=700, height=600, location=no");
       nuWindow.document.open();
       nuWindow.document.write(html);
       nuWindow.document.close();
@@ -48,6 +47,7 @@
     switch (themeName) {
       case 'debug':
         html = '<h1>Debug View</h1>';
+        html += '<pre><code>' + JSON.stringify(fields, null, 2) + '</code></pre>';
         break;
       default:
         html = Formbuilder.themes['page']({
